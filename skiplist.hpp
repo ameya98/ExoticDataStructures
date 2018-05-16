@@ -40,37 +40,6 @@ private:
 
     // number of nodes/items currently stored
     int skiplist_size;
-public:
-    skiplist()
-    {
-        // seed rand() according to the time
-        srand(time(NULL));
-
-        // initialize the sentinel nodes
-        start = new skiplist_node(neg_infinity, skiplist_max_height);
-        end = new skiplist_node(infinity, skiplist_max_height);
-
-        for(int i = 0; i <= skiplist_max_height; ++i)
-        {
-            start -> next[i] = end;
-        }
-
-        for(int i = 0; i <= skiplist_max_height; ++i)
-        {
-            end -> next[i] = NULL;
-        }
-
-        // initialize size
-        skiplist_size = 0;
-    }
-
-    // search for a value
-    bool search(int val)
-    {
-        if (search_helper(val, 0) -> val == val) return true;
-        else return false;
-
-    }
 
     // search_helper(val, min_level), if val is found in the levels >= minlevel, returns a pointer to the node with value val,
     // else, returns a pointer to the node just before where it should be.
@@ -125,6 +94,38 @@ public:
             new_node -> next[i] = curr -> next[i];
             curr -> next[i] = new_node;
         }
+    }
+
+public:
+    skiplist()
+    {
+        // seed rand() according to the time
+        srand(time(NULL));
+
+        // initialize the sentinel nodes
+        start = new skiplist_node(neg_infinity, skiplist_max_height);
+        end = new skiplist_node(infinity, skiplist_max_height);
+
+        for(int i = 0; i <= skiplist_max_height; ++i)
+        {
+            start -> next[i] = end;
+        }
+
+        for(int i = 0; i <= skiplist_max_height; ++i)
+        {
+            end -> next[i] = NULL;
+        }
+
+        // initialize size
+        skiplist_size = 0;
+    }
+
+    // search for a value
+    bool search(int val)
+    {
+        if (search_helper(val, 0) -> val == val) return true;
+        else return false;
+
     }
 
     void insert(int val)
