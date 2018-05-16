@@ -25,7 +25,6 @@ int main()
 
         sl_integer.insert(integers[i]);
         sl_double.insert(doubles[i]);
-
     }
 
     // print the list - the '<<' operator has been overloaded!

@@ -6,13 +6,13 @@ A C++ implementation of skiplists, a randomized data structure.
 */
 
 #include <stdexcept>
-#include <climits>
+#include <limits>
 #include <cstdlib>
 #include <ctime>
 
+// The max-height of the skiplist.
+// note: the skiplist's bottomost list is at height 0
 const int skiplist_max_height = 50;
-const int infinity = INT_MAX;
-const int neg_infinity = INT_MIN;
 
 // note: range of values the int skiplist supports is (-INT_MIN, INT_MAX)
 template <typename TYPE>
@@ -31,13 +31,13 @@ struct skiplist_node
 
 };
 
-template <class TYPE>
+template <typename TYPE>
 class skiplist;
 
-template<typename TYPE>
-std::ostream& operator<<(std::ostream& os, const skiplist<TYPE>& sl);
+template <typename TYPE>
+std::ostream& operator<< (std::ostream& os, const skiplist<TYPE>& sl);
 
-template <class TYPE>
+template <typename TYPE>
 class skiplist
 {
 private:
@@ -110,8 +110,8 @@ public:
         srand(time(NULL));
 
         // initialize the sentinel nodes
-        start = new skiplist_node<TYPE>(neg_infinity, skiplist_max_height);
-        end = new skiplist_node<TYPE>(infinity, skiplist_max_height);
+        start = new skiplist_node<TYPE>(std::numeric_limits<TYPE>::min(), skiplist_max_height);
+        end = new skiplist_node<TYPE>(std::numeric_limits<TYPE>::max(), skiplist_max_height);
 
         for(int i = 0; i <= skiplist_max_height; ++i)
         {
@@ -184,7 +184,7 @@ public:
         return skiplist_size;
     }
 
-    friend std::ostream& operator<< <>(std::ostream& os, const skiplist<TYPE>& sl);
+    friend std::ostream& operator<< <>(std::ostream& os, const skiplist& sl);
 
 };
 
