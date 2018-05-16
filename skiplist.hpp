@@ -14,15 +14,15 @@ const int skiplist_max_height = 50;
 const int infinity = INT_MAX;
 const int neg_infinity = INT_MIN;
 
-// we will only create int skiplists here - support for templates later
-// note: range of values the skiplist supports is (-INT_MIN, INT_MAX)
+// note: range of values the int skiplist supports is (-INT_MIN, INT_MAX)
+template <typename TYPE>
 struct skiplist_node
 {
-    int val;
+    TYPE val;
     int height;
     skiplist_node ** next;
 
-    skiplist_node(int inp_val, int inp_height)
+    skiplist_node(TYPE inp_val, int inp_height)
     {
         val = inp_val;
         height = inp_height;
@@ -31,12 +31,19 @@ struct skiplist_node
 
 };
 
+template <class TYPE>
+class skiplist;
+
+template<typename TYPE>
+std::ostream& operator<<(std::ostream& os, const skiplist<TYPE>& sl);
+
+template <class TYPE>
 class skiplist
 {
 private:
     // sentinel nodes - start and end.
-    skiplist_node * start;
-    skiplist_node * end;
+    skiplist_node<TYPE> * start;
+    skiplist_node<TYPE> * end;
 
     // number of nodes/items currently stored
     int skiplist_size;
@@ -47,10 +54,10 @@ private:
     // If current key == val, done.
     // Go right if next key <= val
     // Go down if next key > val
-    skiplist_node * search_helper(int val, int min_level)
+    skiplist_node<TYPE> * search_helper(TYPE val, int min_level)
     {
-        skiplist_node * curr;
-        skiplist_node * next;
+        skiplist_node<TYPE> * curr;
+        skiplist_node<TYPE> * next;
         int curr_height = skiplist_max_height;
 
         curr = start;
@@ -83,10 +90,10 @@ private:
     }
 
     // insert val from levels 0 upto 'level'
-    void insert_upto_level(int val, int level)
+    void insert_upto_level(TYPE val, int level)
     {
-        skiplist_node * curr;
-        skiplist_node * new_node = new skiplist_node(val, level);
+        skiplist_node<TYPE> * curr;
+        skiplist_node<TYPE> * new_node = new skiplist_node<TYPE>(val, level);
 
         for(int i = 0; i <= level; ++i)
         {
@@ -103,8 +110,8 @@ public:
         srand(time(NULL));
 
         // initialize the sentinel nodes
-        start = new skiplist_node(neg_infinity, skiplist_max_height);
-        end = new skiplist_node(infinity, skiplist_max_height);
+        start = new skiplist_node<TYPE>(neg_infinity, skiplist_max_height);
+        end = new skiplist_node<TYPE>(infinity, skiplist_max_height);
 
         for(int i = 0; i <= skiplist_max_height; ++i)
         {
@@ -121,14 +128,14 @@ public:
     }
 
     // search for a value
-    bool search(int val)
+    bool search(TYPE val)
     {
         if (search_helper(val, 0) -> val == val) return true;
         else return false;
 
     }
 
-    void insert(int val)
+    void insert(TYPE val)
     {
         int level = 0;
         // keep flipping a coin!
@@ -141,15 +148,15 @@ public:
         skiplist_size += 1;
     }
 
-    void remove(int val)
+    void remove(TYPE val)
     {
-        skiplist_node * curr = search_helper(val, 0);
+        skiplist_node<TYPE> * curr = search_helper(val, 0);
 
         // val exists in the skiplist
         if(curr -> val == val)
         {
             int height = curr -> height;
-            skiplist_node * prev;
+            skiplist_node<TYPE> * prev;
 
             for(int i = 0; i <= height; ++i)
             {
@@ -177,14 +184,15 @@ public:
         return skiplist_size;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const skiplist& sl);
+    friend std::ostream& operator<< <>(std::ostream& os, const skiplist<TYPE>& sl);
 
 };
 
 // overload the << operator for printing
-std::ostream &operator<<(std::ostream &os, skiplist const &sl)
+template <typename TYPE>
+std::ostream &operator<<(std::ostream &os, skiplist<TYPE> const &sl)
 {
-    skiplist_node * curr;
+    skiplist_node<TYPE> * curr;
 
     os << "---\n";
     for(int level = 0; level <= skiplist_max_height; ++level)
