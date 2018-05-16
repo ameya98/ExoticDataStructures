@@ -1,5 +1,5 @@
 # ExoticDataStructures
-Exotic data-structures in C++14.
+Exotic data-structures in C++14. Supported for suitable types through templates. 
 
 ## Skiplists
 A randomised data-structure with logarithmic expected-time for search, delete and insert operations.  
@@ -7,11 +7,11 @@ Use the library in your own source code with:
 ```cpp
 #include "skiplist.hpp"
 ```
-and then, declare a skiplist with:
+and then, declare a skiplist of type _typename_ with:
 ```cpp
-skiplist sl;
+skiplist<typename> sl;
 ```
-Currently, only int elements supported.
+Note, the '<' and '<=' operators must be defined, or overloaded (if required) for _typename_.
 ### Class Methods
 Insertion:  __void insert(int val)__
 ```cpp
