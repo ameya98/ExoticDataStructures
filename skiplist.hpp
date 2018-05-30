@@ -156,27 +156,37 @@ public:
         if(curr -> val == val)
         {
             int height = curr -> height;
-            skiplist_node<TYPE> * prev;
+            int curr_height = height;
+            skiplist_node<TYPE> * prev[height + 1];
+            skiplist_node<TYPE> * prev_node;
 
-            for(int i = 0; i <= height; ++i)
+            prev_node = start;
+            while(curr_height >= 0)
             {
-                prev = start;
-                while(prev -> next[i] != curr)
+                while(prev_node -> next[curr_height] != curr)
                 {
-                    prev = prev -> next[i];
+                    prev_node = prev_node -> next[curr_height];
                 }
 
-                prev -> next[i] = curr -> next[i];
+                while((curr_height >= 0) and (prev_node -> next[curr_height]  == curr))
+                {
+                    prev[curr_height] = prev_node;
+                    curr_height -= 1;
+                }
+            }
+
+            // update the previous nodes at every level
+            for(int i = 0; i <= height; ++i)
+            {
+                prev[i] -> next[i] = curr -> next[i];
             }
 
             delete curr;
             skiplist_size -= 1;
+
         }
         // val is not present in the skiplist
-        else
-        {
-            throw std::invalid_argument("value not found in skiplist - cannot delete.");
-        }
+        else throw std::invalid_argument("value not found in skiplist - cannot delete.");
     }
 
     int size()

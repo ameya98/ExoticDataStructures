@@ -57,6 +57,8 @@ int main()
     for(int i = 50; i < 100; ++i)
     {
         sl_integer.remove(integers[i]);
+        cout << "removed " << i << " " << integers[i] << "\n";
+
     }
 
     // print the empty skiplist
