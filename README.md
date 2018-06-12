@@ -1,34 +1,34 @@
 # ExoticDataStructures
-Exotic data-structures in C++14. Supported for suitable types through templates.
+Exotic data-structures in C++14. Supported for suitable types through templates.  
 Currently implemented here:
 * Fenwick Trees (Binary Indexed Trees)
 * Skiplists
 
 ## Fenwick Trees
 A flat-array based tree that allows calculation of prefix and subarray sums in logarithmic time.
-Supports point-based and range-based updates (increase every element in a[i..j] by a certain value) in logarithmic time as well.
+Supports point-based and range-based updates (increase every element in a[i..j] by a certain value) in logarithmic time as well.  
 Use the library in your own source code with:
 ```cpp
 #include "fenwicktree.hpp"
 ```
-First, declare a __std::vector__ or a standard array of type _typename_:
+There are two options to initialize the Fenwick Tree:
+* Declare a __std::vector__ of type _typename_:
 ```cpp
-std::vector<typename> v;
-typename a[length];
-```
-Fill them with the input values. Depending on the choice above, declare a Fenwick Tree of type _typename_ with:  
-```cpp
+std::vector<typename> v = {1, 5, 7, 8};
 FenwickTree<typename> ft(v);
 ```
 or
+* Declare a standard array of type _typename_:  
 ```cpp
+typename a[length] = {1, 2, 8};
 FenwickTree<typename> ft(a, length);
 ```
-Note that the "+" operator must be defined for _typename_.   
+Input the values in the containers before initializing the FenwickTree, or alternatively use the _point_update()_ method to fill in the values.  Note that the Fenwick Tree cannot change size once initialized, however.  
+The "+" operator must be defined for _typename_.   
 The standard types:  _int_, _double_, _float_, _long_ and _long long_ are all supported.
 
 ### Class Methods
-In the descriptions below, the array a[..] represents the array over which sums and updates occur.
+In the descriptions below, the array a[..] represents the array over which sums and updates occur.  
 This is the array to which the Fenwick Tree must be associated with, with the constructor above.
 
 #### Updates
@@ -37,7 +37,7 @@ Increase all values in a[left..right], endpoints inclusive, by val.
 ```cpp
 ft.range_update(0, 3, 2);
 ```
-#### Point Update:  _void point_update(size_t pos, ypename val)_
+#### Point Update:  _void point_update(size_t pos, typename val)_
 Increase a[pos] by val.
 ```cpp
 ft.point_update(1);
