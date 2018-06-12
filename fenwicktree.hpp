@@ -1,27 +1,44 @@
 /*
 Author: Ameya Daigavane
 Date: 11th June, 2018
-A C++ implementation Fenwick Tree (or a Binary Indexed Tree) that allows logarithmic time range sum queries and point-wise updates.
+A C++ implementation of a Fenwick Tree (a Binary Indexed Tree) that allows logarithmic time range-sum queries, point queries, as well as range and point updates.
 */
 
 #include <stdexcept>
+
+template <typename TYPE>
 class FenwickTree
 {
     private:
-        int * add;
+        TYPE * add;
+        TYPE * mul;
         int length;
+
+        // performs the actual range update
+        void range_update_helper(int pos, TYPE mulfact, TYPE addfact)
+        {
+            pos += 1;
+            while(pos <= length)
+            {
+                mul[pos - 1] += mulfact;
+                add[pos - 1] += addfact;
+                pos += pos & -pos;
+            }
+        }
 
     public:
         // constructor with vector
-        FenwickTree(std::vector<int> v)
+        FenwickTree(std::vector<TYPE> v)
         {
             length = v.size();
-            add = new int[length];
+            add = new TYPE[length];
+            mul = new TYPE[length];
 
             // initialize
             for(int i = 0; i < length; ++i)
             {
                 add[i] = 0;
+                mul[i] = 0;
             }
 
             // point-wise updates
@@ -31,16 +48,18 @@ class FenwickTree
             }
         }
 
-        // constructor with an array
-        FenwickTree(int v[], int input_length)
+        // constructor with an array v[] of given size input_length
+        FenwickTree(TYPE v[], int input_length)
         {
             length = input_length;
-            add = new int[length];
+            add = new TYPE[length];
+            mul = new TYPE[length];
 
             // initialize
             for(int i = 0; i < length; ++i)
             {
                 add[i] = 0;
+                mul[i] = 0;
             }
 
             // point-wise updates
@@ -51,18 +70,27 @@ class FenwickTree
         }
 
         // add value 'val' to position i in a[0..length - 1]
-        void point_update(int i, int val)
+        void point_update(int i, TYPE val)
         {
-            i += 1;
-            while(i <= length)
+            range_update(i, i, val);
+        }
+
+        // add value 'val' to postions a[i..j]
+        void range_update(int i, int j, TYPE val)
+        {
+            if(i < 0 or j < i or j >= length)
             {
-                add[i - 1] += val;
-                i += i & -i;
+                throw std::invalid_argument("subarray range invalid.");
+            }
+            else
+            {
+                range_update_helper(i, val, -val * (i - 1));
+                range_update_helper(j, -val, val * j);
             }
         }
 
         // find sum of range a[i..j] (both inclusive)
-        int range_sum(int i, int j)
+        TYPE range_sum(int i, int j)
         {
             if(i < 0 or j < i or j >= length)
             {
@@ -75,22 +103,26 @@ class FenwickTree
         }
 
         // find sum of range a[0..i] (both inclusive)
-        int subarray_sum(int i)
+        TYPE subarray_sum(int i)
         {
-            int sum = 0;
+            TYPE mulfact = 0;
+            TYPE addfact = 0;
+
+            TYPE startindex = i;
             i += 1;
 
             while(i > 0)
             {
-                sum += add[i - 1];
+                addfact += add[i - 1];
+                mulfact += mul[i - 1];
                 i = i & (i - 1);
             }
 
-            return sum;
+            return startindex * mulfact + addfact;
         }
 
         // returns the value of a[i]
-        int point_sum(int i)
+        TYPE point_sum(int i)
         {
             if(i < 0 or i >= length)
             {
