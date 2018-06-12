@@ -12,17 +12,17 @@ A C++ implementation of skiplists, a randomized data structure.
 
 // The max-height of the skiplist.
 // note: the skiplist's bottomost list is at height 0
-const int skiplist_max_height = 50;
+const size_t skiplist_max_height = 50;
 
 // note: range of values the int skiplist supports is (-INT_MIN, INT_MAX)
 template <typename TYPE>
 struct skiplist_node
 {
     TYPE val;
-    int height;
+    size_t height;
     skiplist_node ** next;
 
-    skiplist_node(TYPE inp_val, int inp_height)
+    skiplist_node(TYPE inp_val, size_t inp_height)
     {
         val = inp_val;
         height = inp_height;
@@ -38,7 +38,7 @@ template <typename TYPE>
 std::ostream& operator<< (std::ostream& os, const skiplist<TYPE>& sl);
 
 template <typename TYPE>
-class skiplist
+class Skiplist
 {
 private:
     // sentinel nodes - start and end.
@@ -46,7 +46,7 @@ private:
     skiplist_node<TYPE> * end;
 
     // number of nodes/items currently stored
-    int skiplist_size;
+    size_t skiplist_size;
 
     // search_helper(val, min_level), if val is found in the levels >= minlevel, returns a pointer to the node with value val,
     // else, returns a pointer to the node just before where it should be.
@@ -55,11 +55,11 @@ private:
     // If current key == val, done.
     // Go right if next key <= val
     // Go down if next key > val
-    skiplist_node<TYPE> * search_helper(TYPE val, int min_level)
+    skiplist_node<TYPE> * search_helper(TYPE val, size_t min_level)
     {
         skiplist_node<TYPE> * curr;
         skiplist_node<TYPE> * next;
-        int curr_height = skiplist_max_height;
+        size_t curr_height = skiplist_max_height;
 
         curr = start;
         next = curr -> next[curr_height];
@@ -91,12 +91,12 @@ private:
     }
 
     // insert val from levels 0 upto 'level'
-    void insert_upto_level(TYPE val, int level)
+    void insert_upto_level(TYPE val, size_t level)
     {
         skiplist_node<TYPE> * curr;
         skiplist_node<TYPE> * new_node = new skiplist_node<TYPE>(val, level);
 
-        for(int i = 0; i <= level; ++i)
+        for(size_t i = 0; i <= level; ++i)
         {
             curr = search_helper(val, i);
             new_node -> next[i] = curr -> next[i];
@@ -114,12 +114,12 @@ public:
         start = new skiplist_node<TYPE>(std::numeric_limits<TYPE>::min(), skiplist_max_height);
         end = new skiplist_node<TYPE>(std::numeric_limits<TYPE>::max(), skiplist_max_height);
 
-        for(int i = 0; i <= skiplist_max_height; ++i)
+        for(size_t i = 0; i <= skiplist_max_height; ++i)
         {
             start -> next[i] = end;
         }
 
-        for(int i = 0; i <= skiplist_max_height; ++i)
+        for(size_t i = 0; i <= skiplist_max_height; ++i)
         {
             end -> next[i] = NULL;
         }
@@ -139,7 +139,7 @@ public:
     // insert a value
     void insert(TYPE val)
     {
-        int level = 0;
+        size_t level = 0;
         // keep flipping a coin!
         while (level < skiplist_max_height and rand() % 2 == 1)
         {
@@ -158,8 +158,8 @@ public:
         // val exists in the skiplist
         if(curr -> val == val)
         {
-            int height = curr -> height;
-            int curr_height = height;
+            size_t height = curr -> height;
+            size_t curr_height = height;
             skiplist_node<TYPE> * prev[height + 1];
             skiplist_node<TYPE> * prev_node;
 
@@ -179,7 +179,7 @@ public:
             }
 
             // update the previous nodes at every level
-            for(int i = 0; i <= height; ++i)
+            for(size_t i = 0; i <= height; ++i)
             {
                 prev[i] -> next[i] = curr -> next[i];
             }
@@ -192,7 +192,7 @@ public:
         else throw std::invalid_argument("value not found in skiplist - cannot delete.");
     }
 
-    int size()
+    size_t size()
     {
         return skiplist_size;
     }
@@ -208,7 +208,7 @@ std::ostream &operator<<(std::ostream &os, skiplist<TYPE> const &sl)
     skiplist_node<TYPE> * curr;
 
     os << "---\n";
-    for(int level = 0; level <= skiplist_max_height; ++level)
+    for(size_t level = 0; level <= skiplist_max_height; ++level)
     {
         os << "Skiplist Level " << level << ":" << '\n';
 
