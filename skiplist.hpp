@@ -50,6 +50,7 @@ private:
 
     // search_helper(val, min_level), if val is found in the levels >= minlevel, returns a pointer to the node with value val,
     // else, returns a pointer to the node just before where it should be.
+
     // Idea:
     // If current key == val, done.
     // Go right if next key <= val
@@ -135,6 +136,7 @@ public:
 
     }
 
+    // insert a value
     void insert(TYPE val)
     {
         int level = 0;
@@ -148,6 +150,7 @@ public:
         skiplist_size += 1;
     }
 
+    // remove a value - one copy only.
     void remove(TYPE val)
     {
         skiplist_node<TYPE> * curr = search_helper(val, 0);
