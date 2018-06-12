@@ -12,8 +12,8 @@ A driver program for the 'skiplist.hpp' library.
 using namespace std;
 int main()
 {
-    skiplist<int> sl_integer;
-    skiplist<double> sl_double;
+    Skiplist<int> sl_integer;
+    Skiplist<double> sl_double;
 
     // insert a 100 random integers in the range 0 to 999.
     int integers[100];

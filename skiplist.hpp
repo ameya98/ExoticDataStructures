@@ -2,7 +2,7 @@
 Skiplists in C++
 Author: Ameya Daigavane
 Date: 15th May 2018
-A C++ implementation of skiplists, a randomized data structure.
+A C++ implementation of skiplists, a randomized data structure supporting logarithmic expected-time insert, search and delete operations. 
 */
 
 #include <stdexcept>
@@ -32,15 +32,15 @@ struct skiplist_node
 };
 
 template <typename TYPE>
-class skiplist;
+class Skiplist;
 
 template <typename TYPE>
-std::ostream& operator<< (std::ostream& os, const skiplist<TYPE>& sl);
+std::ostream& operator<< (std::ostream& os, const Skiplist<TYPE>& sl);
 
 template <typename TYPE>
 class Skiplist
 {
-private:
+  private:
     // sentinel nodes - start and end.
     skiplist_node<TYPE> * start;
     skiplist_node<TYPE> * end;
@@ -48,7 +48,8 @@ private:
     // number of nodes/items currently stored
     size_t skiplist_size;
 
-    // search_helper(val, min_level), if val is found in the levels >= minlevel, returns a pointer to the node with value val,
+    // search_helper(val, min_level):
+    // if val is found in the levels >= minlevel, returns a pointer to the node with value val,
     // else, returns a pointer to the node just before where it should be.
 
     // Idea:
@@ -104,10 +105,10 @@ private:
         }
     }
 
-public:
-    skiplist()
+  public:
+    Skiplist()
     {
-        // seed rand() according to the time
+        // seed rand() according to the current time
         srand(time(NULL));
 
         // initialize the sentinel nodes
@@ -164,7 +165,7 @@ public:
             skiplist_node<TYPE> * prev_node;
 
             prev_node = start;
-            while(curr_height >= 0)
+            while(curr_height != size_t(0) - 1)
             {
                 while(prev_node -> next[curr_height] != curr)
                 {
@@ -197,13 +198,13 @@ public:
         return skiplist_size;
     }
 
-    friend std::ostream& operator<< <>(std::ostream& os, const skiplist& sl);
+    friend std::ostream& operator<< <>(std::ostream& os, const Skiplist& sl);
 
 };
 
 // overload the << operator for printing
 template <typename TYPE>
-std::ostream &operator<<(std::ostream &os, skiplist<TYPE> const &sl)
+std::ostream &operator<<(std::ostream &os, Skiplist<TYPE> const &sl)
 {
     skiplist_node<TYPE> * curr;
 
