@@ -11,21 +11,28 @@ and then, declare a skiplist of type _typename_ with:
 ```cpp
 skiplist<typename> sl;
 ```
-Note, the '<' and '<=' operators must be defined, or overloaded (if required) for _typename_.
+Note,  _typename_ must be one of the types defined in __std::numeric_limits__, which includes the common _int_, _double_, _float_, _long_ and _long long_ datatypes.
+
 ### Class Methods
-Insertion:  __void insert(int val)__
+#### Insertion:  _void insert(int val)_
 ```cpp
 sl.insert(18);
 ```
-Deletion:  __void remove(int val)__
+#### Deletion:  _void remove(int val)_
 ```cpp
 sl.remove(11);
 ```
-Search:  __void search(int val)__
+#### Search:  _void search(int val)_
 ```cpp
 sl.search(29);
 ```
-Size:  __void size()__
+#### Size:  _void size()_
 ```cpp
 sl.size();
 ```
+
+The '<<' operator has been overloaded, so you can do this:
+```cpp
+std::cout << sl;
+```
+to show the contents of the skiplist.
