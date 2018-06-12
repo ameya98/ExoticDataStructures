@@ -12,10 +12,10 @@ class FenwickTree
     private:
         TYPE * add;
         TYPE * mul;
-        int length;
+        size_t length;
 
         // performs the actual range update
-        void range_update_helper(int pos, TYPE mulfact, TYPE addfact)
+        void range_update_helper(size_t pos, TYPE mulfact, TYPE addfact)
         {
             pos += 1;
             while(pos <= length)
@@ -28,21 +28,21 @@ class FenwickTree
 
     public:
         // constructor with vector
-        FenwickTree(std::vector<TYPE> v)
+        FenwickTree(std::vector<TYPE>& v)
         {
             length = v.size();
             add = new TYPE[length];
             mul = new TYPE[length];
 
             // initialize
-            for(int i = 0; i < length; ++i)
+            for(size_t i = 0; i < length; ++i)
             {
                 add[i] = 0;
                 mul[i] = 0;
             }
 
             // point-wise updates
-            for(int i = 0; i < length; ++i)
+            for(size_t i = 0; i < length; ++i)
             {
                 point_update(i, v[i]);
             }
@@ -56,27 +56,27 @@ class FenwickTree
             mul = new TYPE[length];
 
             // initialize
-            for(int i = 0; i < length; ++i)
+            for(size_t i = 0; i < length; ++i)
             {
                 add[i] = 0;
                 mul[i] = 0;
             }
 
             // point-wise updates
-            for(int i = 0; i < length; ++i)
+            for(size_t i = 0; i < length; ++i)
             {
                 point_update(i, v[i]);
             }
         }
 
         // add value 'val' to position i in a[0..length - 1]
-        void point_update(int i, TYPE val)
+        void point_update(size_t i, TYPE val)
         {
             range_update(i, i, val);
         }
 
         // add value 'val' to postions a[i..j]
-        void range_update(int i, int j, TYPE val)
+        void range_update(size_t i, size_t j, TYPE val)
         {
             if(i < 0 or j < i or j >= length)
             {
@@ -84,13 +84,13 @@ class FenwickTree
             }
             else
             {
-                range_update_helper(i, val, -val * (i - 1));
+                range_update_helper(i, val, -val * ((TYPE) i - 1));
                 range_update_helper(j, -val, val * j);
             }
         }
 
         // find sum of range a[i..j] (both inclusive)
-        TYPE range_sum(int i, int j)
+        TYPE range_sum(size_t i, size_t j)
         {
             if(i < 0 or j < i or j >= length)
             {
@@ -98,17 +98,24 @@ class FenwickTree
             }
             else
             {
-                return subarray_sum(j) - subarray_sum(i - 1);
+                if(i > 0)
+                {
+                    return prefix_sum(j) - prefix_sum(i - 1);
+                }
+                else
+                {
+                    return prefix_sum(j);
+                }
             }
         }
 
         // find sum of range a[0..i] (both inclusive)
-        TYPE subarray_sum(int i)
+        TYPE prefix_sum(size_t i)
         {
             TYPE mulfact = 0;
             TYPE addfact = 0;
 
-            TYPE startindex = i;
+            size_t startindex = i;
             i += 1;
 
             while(i > 0)
@@ -118,11 +125,11 @@ class FenwickTree
                 i = i & (i - 1);
             }
 
-            return startindex * mulfact + addfact;
+            return ((TYPE) startindex) * mulfact + addfact;
         }
 
         // returns the value of a[i]
-        TYPE point_sum(int i)
+        TYPE point_sum(size_t i)
         {
             if(i < 0 or i >= length)
             {

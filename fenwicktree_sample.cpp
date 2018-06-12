@@ -36,12 +36,14 @@ int main()
     std::cout << ft2.point_sum(2) << "\n";
     std::cout << ft2.point_sum(3) << "\n\n";
 
-    ft2.range_update(0, 3, -2);
+    ft2.point_update(0, -2);
     std::cout << ft2.range_sum(1, 2) << "\n";
     std::cout << ft2.range_sum(1, 3) << "\n";
     std::cout << ft2.point_sum(0) << "\n";
     std::cout << ft2.point_sum(1) << "\n";
     std::cout << ft2.point_sum(2) << "\n";
     std::cout << ft2.point_sum(3) << "\n";
+    std::cout << ft2.prefix_sum(1) << "\n\n";
+
 
 }
