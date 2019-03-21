@@ -1,0 +1,48 @@
+/*
+	Tests for extendible_hashing.cpp - an Extendible Hash Table implementation.
+    Author: Ameya Daigavane
+*/
+
+#include <iostream>
+#include <iostream>
+#include <cstdlib>
+#include <cassert>
+#include "extendible_hashing.cpp"
+
+int main(){
+	ExtendibleHashTable<int> hash_table;
+
+    hash_table.print();
+    std::cout << "\n";
+
+    /* Insert random keys. */
+    int num_keys = 1000;
+    for(int i = 0; i < num_keys; ++i){
+        hash_table.insert(rand() % 1000);
+
+        hash_table.print();
+
+    }
+
+	hash_table.print();
+    std::cout << "\n";
+
+    std::cout << "Insertion tests passed!" << "\n";
+
+    /* Search some keys. */
+    assert(hash_table.count(449) == false);
+    assert(hash_table.count(439) == true);
+    assert(hash_table.count(278) == false);
+    assert(hash_table.count(176) == true);
+
+    std::cout << "Search tests passed!" << "\n";
+
+    /* Delete some keys. */
+    hash_table.del(176);
+    assert(hash_table.count(176) == false);
+
+    std::cout << "Deletion tests passed!" << "\n";
+
+    std::cout << "All tests passed!" << "\n";
+
+}
