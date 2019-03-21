@@ -7,16 +7,14 @@
 #include <iostream>
 #include <cassert>
 
-using namespace std;
-
 template <typename T>
 class HashBucket {
 
 	public:
 	int num_keys;
 	int num_slots;
-	vector <T> slots;
-	vector <T> overflows;
+	std::vector <T> slots;
+	std::vector <T> overflows;
 
 	HashBucket(int num_slots){
 		this -> num_slots = num_slots;
@@ -114,23 +112,23 @@ class HashBucket {
 	/* Print the contents of this bucket. */
 	void print(){
 		if(isEmpty()){
-			cout << "Empty." << "\n";
+			std::cout << "Empty." << "\n";
             return;
 		}
 
 		for(int i = 0; i < slots.size(); ++i){
-			cout << slots[i] << " ";
+			std::cout << slots[i] << " ";
 		}
 
 		if(overflows.size() > 0){
-			cout << " ";
-			cout << "Overflows: ";
+			std::cout << " ";
+			std::cout << "Overflows: ";
 
 			for(int i = 0; i < overflows.size(); ++i){
-				cout << overflows[i] << " ";
+				std::cout << overflows[i] << " ";
 			}
 		}
-		cout << "\n";
+		std::cout << "\n";
 	}
 };
 
@@ -142,7 +140,7 @@ class LinearHashTable {
 	int level;
 	int split_index;
 	int overflow_limit;
-	vector<HashBucket<T>> buckets;
+	std::vector<HashBucket<T>> buckets;
 
 	public:
 	LinearHashTable(int num_buckets = 10, int overflow_limit = 3){
@@ -182,18 +180,18 @@ class LinearHashTable {
 		T key;
 		int hash_val;
 
-		vector<T> keys;
+		std::vector<T> keys;
 
 		while (!bucket1.isEmpty()){
 			key = bucket1.pop();
 			keys.push_back(key);
 		}
 
-        // cout << "Keys to be rehashed: ";
+        // std::cout << "Keys to be rehashed: ";
         // for(int i = 0; i < keys.size(); ++i){
-        //     cout << keys[i] << " ";
+        //     std::cout << keys[i] << " ";
         // }
-        // cout << "\n";
+        // std::cout << "\n";
 
 		for (int i = 0; i < keys.size(); ++i){
 			key = keys[i];
@@ -272,14 +270,14 @@ class LinearHashTable {
         /* Add a new bucket for the split. */
         add_bucket();
 
-        // cout << "Before rehashing: " << "\n";
+        // std::cout << "Before rehashing: " << "\n";
         // buckets[split_index].print();
         // buckets[buckets.size() - 1].print();
 
 		/* Rehash values for this split bucket. */
 		rehash(split_index, buckets.size() - 1);
 
-        // cout << "After rehashing: " << "\n";
+        // std::cout << "After rehashing: " << "\n";
         // buckets[split_index].print();
         // buckets[buckets.size() - 1].print();
 
@@ -294,9 +292,9 @@ class LinearHashTable {
 
 	/* Print the hash table. */
 	void print(){
-		cout << "Split pointer at bucket " << split_index << ".\n";
+		std::cout << "Split pointer at bucket " << split_index << ".\n";
 		for(int i = 0; i < num_buckets; ++i){
-			cout << "Bucket " << i << ": ";
+			std::cout << "Bucket " << i << ": ";
 			buckets[i].print();
 		}
 	}
