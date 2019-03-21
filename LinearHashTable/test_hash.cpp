@@ -36,6 +36,15 @@ int main(){
     /* Delete some keys. */
     hash_table.del(176);
     assert(hash_table.count(176) == false);
+    hash_table.del(439);
+    assert(hash_table.count(439) == true);
+    hash_table.del(439);
+    assert(hash_table.count(439) == true);
+    hash_table.del(439);
+    assert(hash_table.count(439) == false);
+
+    hash_table.print();
+    std::cout << "\n";
 
     std::cout << "Deletion tests passed!" << "\n";
 
