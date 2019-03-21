@@ -1,10 +1,9 @@
 /*
-	Linear Hashing in C++
+	Linear Hashing in C++.
     Author: Ameya Daigavane
 */
 
 #include <vector>
-#include <string>
 #include <iostream>
 #include <cassert>
 

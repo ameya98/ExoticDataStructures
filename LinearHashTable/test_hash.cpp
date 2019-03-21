@@ -1,5 +1,5 @@
 /*
-	Tests for linear_hashing.cpp - a Linear Hash Table.
+	Tests for linear_hashing.cpp - a Linear Hash Table implementation.
     Author: Ameya Daigavane
 */
 
