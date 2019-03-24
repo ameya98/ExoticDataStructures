@@ -4,13 +4,12 @@
 */
 
 #include <iostream>
-#include <iostream>
 #include <cstdlib>
 #include <cassert>
 #include "extendible_hashing.cpp"
 
 int main(){
-	ExtendibleHashTable<int> hash_table;
+	ExtendibleHashTable<int> hash_table(0, 3);
 
     hash_table.print();
     std::cout << "\n";
@@ -18,31 +17,26 @@ int main(){
     /* Insert random keys. */
     int num_keys = 1000;
     for(int i = 0; i < num_keys; ++i){
-        hash_table.insert(rand() % 1000);
-
-        hash_table.print();
-
+        hash_table.insert(rand() % 100000);
     }
 
-	hash_table.print();
-    std::cout << "\n";
+	// hash_table.print();
+    // std::cout << "\n";
 
     std::cout << "Insertion tests passed!" << "\n";
 
     /* Search some keys. */
-    assert(hash_table.count(449) == false);
-    assert(hash_table.count(439) == true);
-    assert(hash_table.count(278) == false);
-    assert(hash_table.count(176) == true);
+    assert(hash_table.count(0) == false);
+    assert(hash_table.count(19801) == true);
+    assert(hash_table.count(1) == false);
+    assert(hash_table.count(12164) == true);
 
     std::cout << "Search tests passed!" << "\n";
 
     /* Delete some keys. */
-    hash_table.del(176);
-    assert(hash_table.count(176) == false);
+    hash_table.del(12164);
+    assert(hash_table.count(12164) == false);
 
     std::cout << "Deletion tests passed!" << "\n";
-
     std::cout << "All tests passed!" << "\n";
-
 }
