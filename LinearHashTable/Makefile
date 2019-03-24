@@ -1,2 +1,2 @@
-test: linear_hashing.cpp test_hash.cpp
-		g++ linear_hashing.cpp test_hash.cpp -o test_hash.exe
+test: linear_hashing.hpp test_linear_hash.cpp
+		g++ linear_hashing.hpp test_linear_hash.cpp -o test_linear_hash.exe

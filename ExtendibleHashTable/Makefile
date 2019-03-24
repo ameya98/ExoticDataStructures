@@ -1,2 +1,2 @@
-test: extendible_hashing.cpp test_hash.cpp
-		g++ extendible_hashing.cpp test_hash.cpp -o test_hash.exe
+test: extendible_hashing.hpp test_extn_hash.cpp
+		g++ extendible_hashing.hpp test_extn_hash.cpp -o test_extn_hash.exe
