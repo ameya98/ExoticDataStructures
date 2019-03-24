@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cassert>
-#include "extendible_hashing.cpp"
+#include "extendible_hashing.hpp"
 
 int main(){
 	ExtendibleHashTable<int> hash_table(0, 3);

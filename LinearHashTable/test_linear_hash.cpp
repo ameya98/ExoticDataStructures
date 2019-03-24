@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cassert>
-#include "linear_hashing.cpp"
+#include "linear_hashing.hpp"
 
 int main(){
 	LinearHashTable<int> hash_table(10);
