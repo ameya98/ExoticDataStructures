@@ -15,7 +15,7 @@ int main()
     Skiplist<int> sl_integer;
     Skiplist<double> sl_double;
 
-    // insert a 100 random integers in the range 0 to 999.
+    // Insert a 100 random integers in the range 0 to 999.
     int integers[100];
     double doubles[100];
     for(int i = 0; i < 100; ++i)
@@ -27,20 +27,20 @@ int main()
         sl_double.insert(doubles[i]);
     }
 
-    // print the list - the '<<' operator has been overloaded!
+    // Print the list - the '<<' operator has been overloaded!
     cout << sl_integer;
     cout << sl_double;
 
-    // delete the first 50 integers
+    // Delete the first 50 integers
     for(int i = 0; i < 50; ++i)
     {
         sl_integer.remove(integers[i]);
     }
 
-    // how many elements in our skiplist now?
+    // How many elements in our skiplist now?
     cout << sl_integer.size() << " elements in skiplist currently." << '\n';
 
-    // search for the 51st integer
+    // Search for the 51st integer
     if(sl_integer.search(integers[50]))
     {
         cout << integers[50] << " is in the skiplist." << '\n';
@@ -50,10 +50,10 @@ int main()
         cout << "Something's wrong." << '\n';
     }
 
-    // print the skiplist again
+    // Print the skiplist again.
     cout << sl_integer;
 
-    // delete all the remaining integers
+    // Delete all the remaining integers.
     for(int i = 50; i < 100; ++i)
     {
         sl_integer.remove(integers[i]);
@@ -61,7 +61,8 @@ int main()
 
     }
 
-    // print the empty skiplist
+    // Print the empty skiplist.
     cout << sl_integer;
 
+    cout << "Tests finished!" << "\n";
 }

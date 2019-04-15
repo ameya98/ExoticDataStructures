@@ -2,7 +2,7 @@
 Skiplists in C++
 Author: Ameya Daigavane
 Date: 15th May 2018
-A C++ implementation of skiplists, a randomized data structure supporting logarithmic expected-time insert, search and delete operations. 
+A C++ implementation of skiplists, a randomized data structure supporting logarithmic expected-time insert, search and delete operations.
 */
 
 #include <stdexcept>
@@ -11,22 +11,23 @@ A C++ implementation of skiplists, a randomized data structure supporting logari
 #include <ctime>
 
 // The max-height of the skiplist.
-// note: the skiplist's bottomost list is at height 0
+// Note: the skiplist's bottomost list is at height 0
 const size_t skiplist_max_height = 50;
 
-// note: range of values the int skiplist supports is (-INT_MIN, INT_MAX)
-template <typename TYPE>
-struct skiplist_node
-{
-    TYPE val;
+// Note: range of values the int skiplist supports is (-INT_MIN, INT_MAX)
+template <typename KEY, typename VAL>
+struct skiplist_node {
+
+    KEY key;
+    VAL val;
     size_t height;
     skiplist_node ** next;
 
-    skiplist_node(TYPE inp_val, size_t inp_height)
-    {
+    skiplist_node(KEY inp_key, VAL inp_val, size_t inp_height){
+        key = inp_key;
         val = inp_val;
         height = inp_height;
-        next = new skiplist_node * [height + 1];
+        next = new skiplist_node* [height + 1];
     }
 
 };
@@ -38,26 +39,26 @@ template <typename TYPE>
 std::ostream& operator<< (std::ostream& os, const Skiplist<TYPE>& sl);
 
 template <typename TYPE>
-class Skiplist
-{
+class Skiplist {
+
   private:
-    // sentinel nodes - start and end.
+    // Sentinel nodes - start and end.
     skiplist_node<TYPE> * start;
     skiplist_node<TYPE> * end;
 
-    // number of nodes/items currently stored
+    // Number of nodes/items currently stored
     size_t skiplist_size;
 
     // search_helper(val, min_level):
     // if val is found in the levels >= minlevel, returns a pointer to the node with value val,
     // else, returns a pointer to the node just before where it should be.
-
+    //
     // Idea:
     // If current key == val, done.
     // Go right if next key <= val
     // Go down if next key > val
-    skiplist_node<TYPE> * search_helper(TYPE val, size_t min_level)
-    {
+    skiplist_node<TYPE> * search_helper(TYPE val, size_t min_level) {
+
         skiplist_node<TYPE> * curr;
         skiplist_node<TYPE> * next;
         size_t curr_height = skiplist_max_height;
@@ -65,24 +66,19 @@ class Skiplist
         curr = start;
         next = curr -> next[curr_height];
 
-        while(curr -> val != val)
-        {
+        while(curr -> val != val){
             // next value is also lesser, we can go right
-            if(next -> val <= val)
-            {
+            if(next -> val <= val){
                 curr = next;
                 next = curr -> next[curr_height];
             }
             // next value is smaller, go to lower list
-            else
-            {
-                if(curr_height > min_level)
-                {
+            else{
+                if(curr_height > min_level){
                     curr_height -= 1;
                     next = curr -> next[curr_height];
                 }
-                else
-                {
+                else {
                     break;
                 }
             }
@@ -91,14 +87,13 @@ class Skiplist
         return curr;
     }
 
-    // insert val from levels 0 upto 'level'
-    void insert_upto_level(TYPE val, size_t level)
-    {
+    // Insert val from levels 0 upto level.
+    void insert_upto_level(TYPE val, size_t level) {
+
         skiplist_node<TYPE> * curr;
         skiplist_node<TYPE> * new_node = new skiplist_node<TYPE>(val, level);
 
-        for(size_t i = 0; i <= level; ++i)
-        {
+        for(size_t i = 0; i <= level; ++i){
             curr = search_helper(val, i);
             new_node -> next[i] = curr -> next[i];
             curr -> next[i] = new_node;
@@ -106,12 +101,12 @@ class Skiplist
     }
 
   public:
-    Skiplist()
-    {
-        // seed rand() according to the current time
+    Skiplist() {
+
+        // Seed rand() according to the current time.
         srand(time(NULL));
 
-        // initialize the sentinel nodes
+        // Initialize the sentinel nodes.
         start = new skiplist_node<TYPE>(std::numeric_limits<TYPE>::min(), skiplist_max_height);
         end = new skiplist_node<TYPE>(std::numeric_limits<TYPE>::max(), skiplist_max_height);
 
@@ -125,25 +120,26 @@ class Skiplist
             end -> next[i] = NULL;
         }
 
-        // initialize size
+        // Initialize size.
         skiplist_size = 0;
     }
 
-    // search for a value
-    bool search(TYPE val)
-    {
+    // Search for a value.
+    bool search(TYPE val){
         if (search_helper(val, 0) -> val == val) return true;
         else return false;
-
     }
 
-    // insert a value
-    void insert(TYPE val)
-    {
+    // Insert a value.
+    void insert(TYPE val){
+
+        if(val == std::numeric_limits<TYPE>::min()){
+            throw std::invalid_argument("Cannot insert std::numeric_limits<TYPE>::min() as key. Use any other value.");
+        }
+
         size_t level = 0;
         // keep flipping a coin!
-        while (level < skiplist_max_height and rand() % 2 == 1)
-        {
+        while (level < skiplist_max_height and rand() % 2 == 1){
             level += 1;
         }
 
@@ -151,37 +147,34 @@ class Skiplist
         skiplist_size += 1;
     }
 
-    // remove a value - one copy only.
-    void remove(TYPE val)
-    {
+    // Remove a value - one copy only.
+    void remove(TYPE val){
+
         skiplist_node<TYPE> * curr = search_helper(val, 0);
 
-        // val exists in the skiplist
-        if(curr -> val == val)
-        {
-            size_t height = curr -> height;
-            size_t curr_height = height;
+        // val exists in the skiplist.
+        if(curr -> val == val){
+
+            int height = curr -> height;
+            int curr_height = height;
             skiplist_node<TYPE> * prev[height + 1];
             skiplist_node<TYPE> * prev_node;
 
             prev_node = start;
-            while(curr_height != size_t(0) - 1)
-            {
-                while(prev_node -> next[curr_height] != curr)
-                {
+            while(curr_height >= 0){
+
+                while(prev_node -> next[curr_height] != curr){
                     prev_node = prev_node -> next[curr_height];
                 }
 
-                while((curr_height >= 0) and (prev_node -> next[curr_height]  == curr))
-                {
+                while((curr_height >= 0) and (prev_node -> next[curr_height]  == curr)){
                     prev[curr_height] = prev_node;
                     curr_height -= 1;
                 }
             }
 
-            // update the previous nodes at every level
-            for(size_t i = 0; i <= height; ++i)
-            {
+            // Update the previous nodes at every level.
+            for(size_t i = 0; i <= height; ++i){
                 prev[i] -> next[i] = curr -> next[i];
             }
 
@@ -190,11 +183,10 @@ class Skiplist
 
         }
         // val is not present in the skiplist
-        else throw std::invalid_argument("value not found in skiplist - cannot delete.");
+        else throw std::invalid_argument("Value not found in skiplist. Cannot delete.");
     }
 
-    size_t size()
-    {
+    size_t size(){
         return skiplist_size;
     }
 
@@ -202,7 +194,7 @@ class Skiplist
 
 };
 
-// overload the << operator for printing
+// Overload the << operator for printing
 template <typename TYPE>
 std::ostream &operator<<(std::ostream &os, Skiplist<TYPE> const &sl)
 {
