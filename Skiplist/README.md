@@ -8,7 +8,9 @@ and then, declare a skiplist of type _typename_ with:
 ```cpp
 Skiplist<typename> sl;
 ```
-Note,  _typename_ must be one of the types defined in __std::numeric_limits__, which includes the common _int_, _double_, _float_, _long_ and _long long_ datatypes. At this moment, std::numeric_limits<_typename_>::min() cannot be used as a key, for example INT_MIN when using int.
+Note,  _typename_ must be one of the types defined in __std::numeric_limits__, which includes the common _int_, _double_, _float_, _long_ and _long long_ datatypes.
+
+At this moment, __std::numeric_limits__<_typename_>::_min()_ cannot be used as a key, for example, INT_MIN when using int.
 
 ### Class Methods
 #### Insertion:  _void insert(int val)_
