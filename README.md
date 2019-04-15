@@ -3,6 +3,8 @@ Exotic data-structures in C++14. Supported for suitable types through templates.
 Currently implemented here:
 * Fenwick Trees (Binary Indexed Trees)
 * Skiplists
+* Extendible Hashtables
+* Linear Hashtables
 
 ## Fenwick Trees
 A flat-array based tree that allows calculation of prefix and subarray sums in logarithmic time.
