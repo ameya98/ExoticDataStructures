@@ -1,7 +1,7 @@
 ## Extendible Hash Tables
-Extendible Hash Tables are dynamic hashing structures that resize with the insertion of more data. Rehashing all keys on resizing would be too expensive. Extendible hash tables approach this by only splitting a bucket that has overflowed, rehashing keys from this bucket to split the keys between the old and split bucket. The directory maintains for every bucket which keys should be placed into them, based on the last digits of the hash. How many digits exactly is controlled by the _local_depth_ parameter of the bucket. The _global_depth_ parameter is the maximum over all bucket _local_depth_ parameters.
+Extendible Hash Tables are dynamic hashing structures that resize with the insertion of more data, in order to maintain efficiency in standard hashtable operations. 
 
-For a more thorough explanation of extendible hashing, see the original [paper](https://dl.acm.org/citation.cfm?doid=320083.320092) by R. Fagin et al.
+Rehashing all keys on resizing would be too expensive. Extendible hash tables approach this by only splitting a bucket that has overflowed, rehashing keys from this bucket to split the keys between the old and split bucket. The directory maintains for every bucket which keys should be placed into them, based on the last digits of the hash. How many digits exactly is controlled by the _local_depth_ parameter of the bucket. The _global_depth_ parameter is the maximum over all bucket _local_depth_ parameters.
 
 Use the library in your own source code with:
 ```cpp
@@ -12,6 +12,8 @@ and then, declare a hashtable of key type _KEY_ and value type _VAL_ with:
 ExtendibleHashTable<KEY, VAL> eht(global_depth_initial, num_slots_per_bucket);
 ```
 By default, the initial global depth and number of slots per bucket are set as 0 and 3 respectively, if not passed to the constructor above.
+
+For a more thorough explanation of extendible hashing, see the original [paper](https://dl.acm.org/citation.cfm?doid=320083.320092) by R. Fagin et al.
 
 ### Class Methods
 The following examples assume a declaration of the form:
