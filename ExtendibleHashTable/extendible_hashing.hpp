@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cassert>
 #include <utility>
+#include <functional>
 
 template <typename KEY, typename VAL>
 class HashBucket {
@@ -25,6 +26,7 @@ class HashBucket {
 
 	/* Insert into this bucket. */
 	void insert(std::pair<KEY, VAL> keyval){
+
         /* Should not be full. */
         assert(!isFull());
 
@@ -117,11 +119,22 @@ class ExtendibleHashTable {
 
     size_t global_depth;
     size_t num_slots;
+    size_t num_keys;
     std::vector<int> directory;
 	std::vector<HashBucket<KEY, VAL>> buckets;
+    std::function<size_t (KEY)> hash_func;
+
+    /* Main hash function used. Initially, the identity function. */
+	size_t hash(KEY key) {
+        if(hash_func){
+            return hash_func(key);
+        } else {
+            return key;
+        }
+	}
 
     /* Split bucket with index. */
-    void split_bucket(size_t index){
+    void split_bucket(size_t index) {
 
         size_t local_depth = buckets[directory[index]].local_depth;
         size_t index1 = index & ((1 << local_depth) - 1);
@@ -141,13 +154,8 @@ class ExtendibleHashTable {
         };
     }
 
-    /* Main hash function used. Currently identity. */
-	size_t hash(KEY x){
-		return x;
-	}
-
     /* Rehash between buckets with indices. */
-	void rehash(size_t index1, size_t index2, size_t mask){
+	void rehash(size_t index1, size_t index2, size_t mask) {
         HashBucket<KEY, VAL>& bucket1 = buckets[directory[index1]];
         HashBucket<KEY, VAL>& bucket2 = buckets[directory[index2]];
 
@@ -176,15 +184,13 @@ class ExtendibleHashTable {
                 index = index1;
             }
 
-            // cout << "Inserting key " << key << " into bucket indexed " << directory[index] << "\n";
-
             /* Reinsert based on this hash value. */
 			buckets[directory[index]].insert(item);
 		}
 	}
 
     /* Double directory, and increase global depth by 1. */
-    void double_directory(){
+    void double_directory() {
         size_t curr_size = directory.size();
         for(size_t i = 0; i < curr_size; ++i){
             directory.push_back(directory[i]);
@@ -193,9 +199,11 @@ class ExtendibleHashTable {
     }
 
 	public:
-	ExtendibleHashTable(size_t global_depth = 0, size_t num_slots = 3){
+	ExtendibleHashTable(size_t global_depth = 0, size_t num_slots = 3) {
+
         this -> global_depth = global_depth;
         this -> num_slots = num_slots;
+        this -> num_keys = 0;
 
         size_t num_buckets = 1 << global_depth;
 		HashBucket<KEY, VAL> new_bucket(global_depth, num_slots);
@@ -205,36 +213,48 @@ class ExtendibleHashTable {
         }
 	}
 
+    /* Sets the hash function. */
+	void set_hash(const std::function<size_t (KEY)>& func) {
+		hash_func = func;
+	}
+
 	/* Get bucket index corresponding to this key. */
-	size_t get_bucket(KEY key){
+	size_t get_bucket_index(KEY key) {
 		return hash(key) & ((1 << global_depth) - 1);
 	}
 
 	/* Insert into the hash table according to the hash function. */
-	void insert(KEY key, VAL val){
+	void insert(KEY key, VAL val) {
 
-		size_t index = get_bucket(key);
-        // cout << "Trying to insert " << key << " at index " << index << "\n";
+        /* Get the index of the bucket we're supposed to insert this key-value pair at. */
+		size_t index = get_bucket_index(key);
 
+        /* Check if the bucket is full. */
         if (buckets[directory[index]].isFull()){
-            // cout << "Bucket Full! \n";
+
+            /* If the bucket's local depth matches the global depth, then we have to double the directory first. */
             if(buckets[directory[index]].local_depth == global_depth){
-                // cout << "Directory doubled!" << "\n";
                 double_directory();
-                //print();
             }
+
+            /* Split only this bucket. */
             split_bucket(index);
+
+            /* Try inserting again, recursively. */
             insert(key, val);
         } else {
-            // cout << "Bucket Not Full! \n";
+
+            int old_bucket_size = buckets[directory[index]].size();
             buckets[directory[index]].insert(std::make_pair(key, val));
-            // print();
+            int new_bucket_size = buckets[directory[index]].size();
+
+            num_keys += new_bucket_size - old_bucket_size;
         }
 	}
 
     /* Searches for the key in the hash table. Returns the index of the bucket if found, and -1 if not. */
-    int search(KEY key){
-        size_t index = get_bucket(key);
+    int search(KEY key) {
+        size_t index = get_bucket_index(key);
 
         if(buckets[directory[index]].count(key)){
             return (int) index;
@@ -244,7 +264,7 @@ class ExtendibleHashTable {
     }
 
     /* Delete a key from the hash table. */
-    void remove(KEY key){
+    void remove(KEY key) {
 
         /* Key must be present in the hash table. */
         size_t index = search(key);
@@ -255,12 +275,17 @@ class ExtendibleHashTable {
     }
 
     /* Checks if key is present in the hash table. */
-    bool count(KEY key){
+    bool count(KEY key) {
         return (search(key) != -1);
     }
 
+    /* Returns the total number of key-value pairs. */
+    size_t size() {
+        return num_keys;
+    }
+
 	/* Print the hash table. */
-	void print(bool print_dir = false){
+	void print(bool print_dir = false) {
         if(print_dir){
             print_directory();
         }
