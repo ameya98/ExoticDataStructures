@@ -8,12 +8,21 @@
 #include <cassert>
 #include "extendible_hashing.hpp"
 
+/* Custom hash for the hashtable. */
+size_t custom_hash(int x){
+    return x + 1;
+}
+
 int main(){
+
     /* Hash table parameters. */
     int global_depth_initial = 0;
     int num_slots_per_bucket = 3;
 
 	ExtendibleHashTable<int, int> eht(global_depth_initial, num_slots_per_bucket);
+
+    /* Set a custom hash function. */
+    eht.set_hash(custom_hash);
 
     /* Should be empty. */
     eht.print();

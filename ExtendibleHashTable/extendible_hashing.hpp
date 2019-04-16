@@ -215,6 +215,7 @@ class ExtendibleHashTable {
 
     /* Sets the hash function. */
 	void set_hash(const std::function<size_t (KEY)>& func) {
+        assert(num_keys == 0);
 		hash_func = func;
 	}
 
@@ -244,6 +245,7 @@ class ExtendibleHashTable {
             insert(key, val);
         } else {
 
+            /* Check if we overwrite an existing key. Increment num_keys accordingly. */
             int old_bucket_size = buckets[directory[index]].size();
             buckets[directory[index]].insert(std::make_pair(key, val));
             int new_bucket_size = buckets[directory[index]].size();
