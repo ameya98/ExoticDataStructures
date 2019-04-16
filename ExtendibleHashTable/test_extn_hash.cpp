@@ -1,5 +1,5 @@
 /*
-	Tests for extendible_hashing.cpp - an Extendible Hash Table implementation.
+	Tests for extendible_hashing.hpp - an Extendible Hash Table implementation.
     Author: Ameya Daigavane
 */
 
@@ -9,36 +9,41 @@
 #include "extendible_hashing.hpp"
 
 int main(){
-	ExtendibleHashTable<int, int> hash_table(0, 3);
+    /* Hash table parameters. */
+    int global_depth_initial = 0;
+    int num_slots_per_bucket = 3;
 
-    hash_table.print();
+	ExtendibleHashTable<int, int> eht(global_depth_initial, num_slots_per_bucket);
+
+    /* Should be empty. */
+    eht.print();
     std::cout << "\n";
 
     /* Insert random keys. */
     int num_keys = 1000;
     for(int i = 0; i < num_keys; ++i){
-        hash_table.insert(rand() % 100000, rand() % 10);
+        eht.insert(rand() % 100000, rand() % 10);
     }
 
-    hash_table.print();
+    eht.print();
     std::cout << "\n";
 
     std::cout << "Insertion tests passed!" << "\n";
 
     /* Search some keys. */
-    assert(hash_table.count(0) == false);
-    assert(hash_table.count(27432) == true);
-    assert(hash_table.count(1) == false);
-    assert(hash_table.count(4860) == true);
+    assert(eht.count(0) == false);
+    assert(eht.count(27432) == true);
+    assert(eht.count(1) == false);
+    assert(eht.count(4860) == true);
 
     std::cout << "Search tests passed!" << "\n";
 
     /* Delete some keys. */
-    hash_table.remove(4860);
-    assert(hash_table.count(4860) == false);
+    eht.remove(4860);
+    assert(eht.count(4860) == false);
 
-    hash_table.remove(27432);
-    assert(hash_table.count(27432) == true);
+    eht.remove(27432);
+    assert(eht.count(27432) == false);
 
     std::cout << "Deletion tests passed!" << "\n";
     std::cout << "All tests passed!" << "\n";

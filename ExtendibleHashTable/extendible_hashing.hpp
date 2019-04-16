@@ -28,6 +28,15 @@ class HashBucket {
         /* Should not be full. */
         assert(!isFull());
 
+        for(size_t i = 0; i < slots.size(); ++i){
+            /* Check slots. Overwrite old key-value pair. */
+            if(slots[i].first == keyval.first){
+                slots[i].second = keyval.second;
+                return;
+            }
+        }
+
+        /* Key not found already. */
 		slots.push_back(keyval);
 
         /* Invariant. */
@@ -251,8 +260,11 @@ class ExtendibleHashTable {
     }
 
 	/* Print the hash table. */
-	void print(){
-        print_directory();
+	void print(bool print_dir = false){
+        if(print_dir){
+            print_directory();
+        }
+
         std::cout << "Global Depth: " << global_depth << "\n";
 		for(size_t i = 0; i < buckets.size(); ++i){
 			std::cout << "Bucket " << i << " (Local Depth " << buckets[i].local_depth << ") : ";
